@@ -10,6 +10,7 @@ const navigation = [
   { name: 'Preguntas Frecuentes', to:'/preguntas_frecuentes' },
   { name: 'Seguridad', to: '/seguridad' },
   { name: 'Ticket Soporte', to: '/ticket_soporte' },
+  { name: 'Ticket Dashboard', to: '/ticket_dashboard' },
 ]
 
 export const Header = () => {

@@ -63,9 +63,9 @@ const router = createBrowserRouter([
       {
         path:"tickets",
         element: 
-        <AdminRoute>
+        <ProtectedRoute>
           <TicketDashboard/>
-        </AdminRoute>
+        </ProtectedRoute>
       }
     ],
   },
