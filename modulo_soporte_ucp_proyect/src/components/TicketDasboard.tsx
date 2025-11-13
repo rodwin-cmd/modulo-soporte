@@ -14,6 +14,7 @@ export function TicketDashboard() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
+  // consumo de la bd y tratamiento de bd
   const fetchTickets = async () => {
     try {
       const res = await fetch("http://localhost:4000/api/tickets");
@@ -21,12 +22,13 @@ export function TicketDashboard() {
       setTickets(data);
     } catch (error) {
       console.error(error);
-      setMessage("❌ Error al cargar tickets");
+      setMessage("Error al cargar tickets");
     } finally {
       setLoading(false);
     }
   };
 
+  // respuesta del backend y express
   const updateEstado = async (id: number, nuevoEstado: string) => {
     try {
       await fetch(`http://localhost:4000/api/tickets/${id}`, {
@@ -37,6 +39,7 @@ export function TicketDashboard() {
       setMessage("✅ Estado actualizado");
       fetchTickets();
     } catch (error) {
+      console.log(error)
       setMessage("error");
     }
   };

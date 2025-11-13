@@ -12,10 +12,19 @@ import { Seguridad } from './components/Seguridad'
 import { TicketSoporte } from './components/TicketSoporte'
 import { CuestionMain } from './components/CuestionMain'
 import { TicketDashboard } from './components/TicketDasboard'
+import { Login } from './components/login/Login'
+import { ProtectedRoute } from './components/login/ProtectedRoute'
+import { AdminRoute } from './components/login/AdminRoute'
+import { AuthProvider } from './contextAut/AuthContext'
 
 
-// ruta indice principal
+// ruta indice principal, rutas protegidas
 const router = createBrowserRouter([
+   {
+    path: "/login",
+    element: <Login />,
+  },
+  
   {
     path: "/",
     element: <MainLayout />, // 👈 Header + Footer
@@ -33,20 +42,30 @@ const router = createBrowserRouter([
         element: <Seguridad />,
       },
       {
-        path: "ticket_soporte", 
-        element: <TicketSoporte />,
+        path: "ticket_soporte",
+        element: 
+        <ProtectedRoute>
+          <TicketSoporte />
+        </ProtectedRoute>
+        
       },
       {
         path: "cuestion_main",
         element:<CuestionMain/>
       },
-      {
-        path: "ticket_soporte",
-        element:<TicketSoporte/>
-      },
+       {
+         path: "ticket_dashboard",
+        element:
+        <ProtectedRoute>
+          <TicketDashboard/>
+        </ProtectedRoute>
+       },
       {
         path:"tickets",
-        element: <TicketDashboard/>
+        element: 
+        <AdminRoute>
+          <TicketDashboard/>
+        </AdminRoute>
       }
     ],
   },
@@ -59,8 +78,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    
-    <RouterProvider router={router}/>
-    
+    <AuthProvider>
+      <RouterProvider router={router}/>
+    </AuthProvider>
   </StrictMode>,
 )

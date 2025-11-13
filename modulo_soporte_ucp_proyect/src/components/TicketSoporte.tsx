@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../contextAut/AuthContext";
 
 export function TicketSoporte() {
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState({
-    id_usuario: "1",
+    id_usuario: "",
     asunto: "Error al iniciar sesión",
     descripcion: "No puedo acceder al módulo de soporte",
   });
@@ -10,7 +13,15 @@ export function TicketSoporte() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({ ...prev, id_usuario: user.uid }));
+    }
+  }, [user]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -31,12 +42,15 @@ export function TicketSoporte() {
 
       if (res.ok) {
         setMessage("✅ Ticket creado correctamente.");
-        setFormData({ id_usuario: "", asunto: "", descripcion: "" });
+        setFormData({
+          id_usuario: user?.uid ?? "",
+          asunto: "",
+          descripcion: "",
+        });
       } else {
-        setMessage(`⚠️ Error: ${data.message}`);
+        setMessage(`❌ Error: ${data.message}`);
       }
     } catch (error) {
-      console.error(error);
       setMessage("❌ Error al conectar con el servidor.");
     } finally {
       setLoading(false);
@@ -51,23 +65,22 @@ export function TicketSoporte() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* ID Usuario */}
-          <div>
-            <label htmlFor="id_usuario" className="block text-sm font-medium text-gray-700">
-              ID del Usuario
-            </label>
-            <input
-              type="number"
-              id="id_usuario"
-              name="id_usuario"
-              value={formData.id_usuario}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 p-3"
-              placeholder="Ejemplo: 101"
-              required
-            />
-          </div>
+          
+           {/* Datos del usuario autenticado */}
+            <div className="flex items-center gap-4 mb-4">
+              <img
+                src={user?.photoURL ?? "/avatar-default.png"}
+                referrerPolicy="no-referrer"
+                className="w-12 h-12 rounded-full"
+              />
+              <div>
+                <p className="font-semibold text-gray-900">{user?.displayName}</p>
+                <p className="text-sm text-gray-600">{user?.email}</p>
+              </div>
+            </div>
 
+          {/* UID oculto para el backend */}
+            <input type="hidden" name="id_usuario" value={formData.id_usuario} />
           {/* Asunto */}
           <div>
             <label htmlFor="asunto" className="block text-sm font-medium text-gray-700">
@@ -102,7 +115,6 @@ export function TicketSoporte() {
             />
           </div>
 
-          {/* Botón */}
           <div className="flex justify-center">
             <button
               type="submit"
@@ -116,7 +128,6 @@ export function TicketSoporte() {
           </div>
         </form>
 
-        {/* Mensaje de éxito o error */}
         {message && (
           <p className="text-center mt-6 text-sm font-medium text-gray-800">
             {message}

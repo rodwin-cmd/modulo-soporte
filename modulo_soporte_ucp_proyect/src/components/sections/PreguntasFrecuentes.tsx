@@ -1,5 +1,6 @@
 
 
+import { Link } from "react-router-dom"
 import { faqsList } from "./listsections/listSection"
 
 export const PreguntasFrecuentes = () => {
@@ -15,11 +16,11 @@ export const PreguntasFrecuentes = () => {
                     <div className='mt-3 text-gray-600 dark:text-gray-400'>
                         <p>
                             Si no puedes encontrar la respuesta,contactanos{" "}
-                            <a
+                            <Link
                                 className='text-indigo-600 font-semibold whitespace-nowrap'
-                                href='support@floatui.com'>
+                                to='/ticket_soporte'>
                                 Contacto
-                            </a>
+                            </Link>
                             .
                         </p>
                     </div>
