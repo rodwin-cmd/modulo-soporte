@@ -1,21 +1,66 @@
-import { StrictMode } from 'react'
+import {  StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import { Hero } from './components/Hero'
-import { Banner } from './components/Banner'
-import { CuestionBox } from './components/CuestionBox'
-import { CuestionMain } from './components/CuestionMain'
-import { TopicAsistencia } from './components/TopicAsistencia'
-import { Footer } from './components/Footer'
 
+import './index.css'
+
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { TopicAsistencia } from './components/TopicAsistencia'
+import { NotFoundPage } from './components/NotFoundPage'
+import MainLayout from './components/layouts/MainLayout'
+import { PreguntasFrecuentes } from './components/sections/PreguntasFrecuentes'
+import { Seguridad } from './components/Seguridad'
+import { TicketSoporte } from './components/TicketSoporte'
+import { CuestionMain } from './components/CuestionMain'
+import { TicketDashboard } from './components/TicketDasboard'
+
+
+// ruta indice principal
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />, // 👈 Header + Footer
+    children: [
+      {
+        index: true,
+        element: <TopicAsistencia />, 
+      },
+      {
+        path: "preguntas_frecuentes", 
+        element: <PreguntasFrecuentes />,
+      },
+      {
+        path: "seguridad", 
+        element: <Seguridad />,
+      },
+      {
+        path: "ticket_soporte", 
+        element: <TicketSoporte />,
+      },
+      {
+        path: "cuestion_main",
+        element:<CuestionMain/>
+      },
+      {
+        path: "ticket_soporte",
+        element:<TicketSoporte/>
+      },
+      {
+        path:"tickets",
+        element: <TicketDashboard/>
+      }
+    ],
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
+  },
+
+])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Hero />
-    <Banner />
-    <CuestionBox />
-    <CuestionMain />
-    <TopicAsistencia />
-    <Footer />
+    
+    <RouterProvider router={router}/>
+    
   </StrictMode>,
 )
